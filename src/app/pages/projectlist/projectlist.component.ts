@@ -1,0 +1,188 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink, RouterModule } from '@angular/router';
+import { Project } from '../../models/Project';
+import { SignupService } from '../../services/signup.service';
+import { HttpClientModule } from '@angular/common/http';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { SessionServiceService } from '../../services/session-service.service';
+import { MatIconModule } from '@angular/material/icon';
+
+@Component({
+  selector: 'app-projectlist',
+  standalone: true,
+  imports: [CommonModule,ReactiveFormsModule,RouterLink,HttpClientModule,FormsModule,MatPaginatorModule,RouterModule,MatIconModule],
+  providers:[SignupService],
+  templateUrl: './projectlist.component.html',
+  styleUrl: './projectlist.component.css'
+})
+export class ProjectlistComponent implements OnInit{
+
+  projects: Project[] = []; 
+  filteredProjects!: Project[] ;
+  selectedSortColumn: string = ''; // Track the selected column for sorting
+  isSortAscending: boolean = true; // Track the sorting order
+
+  currentPage: number = 1; // Track the current page number
+  pageSize: number = 10;  // Number of records per page
+
+  loggedInUser: string | null = null;
+
+  constructor(private mySer: SignupService, private session : SessionServiceService){
+
+  }
+  ngOnInit(): void {
+    this.getProjectList();
+
+    this.loggedInUser = this.session.getLoggedUser();
+  }
+
+  getProjectList():void{
+    this.mySer.getAllProjects().subscribe(res=>{
+      this.projects=res;
+     // console.log(this.projects);
+     this.filteredProjects = [...this.projects];
+     this.updateFilteredProjects();
+    })
+  }
+
+  startProject(project: Project): void {
+    console.log("in startProject")
+    // console.log("Project ID:", project.project_id);
+    // console.log("Project Status ID:", project.status_id.status_id);
+    this.updateProjectStatus(project.project_id, 1);
+  }
+
+  closeProject(project: Project): void {
+     console.log("Close button clicked for project:", project);
+  //    console.log("Project ID:", project.project_id);
+  //  console.log("Project Status ID:", project.status_id.status_id);
+   this.updateProjectStatus(project.project_id, 2);
+  }
+
+  cancelProject(project: Project): void {
+      console.log("in cancelProject")
+    //  console.log("Project ID:", project.project_id);
+    //  console.log("Project Status ID:", project.status_id.status_id);
+     this.updateProjectStatus(project.project_id, 3);
+  }
+
+  //for upadate status
+
+  updateProjectStatus(project_id: number, status_id: number): void {
+    this.mySer.updateStatus(project_id, status_id)
+      .subscribe( 
+        response => {
+          console.log('Project status updated:', response);
+          this.getProjectList();
+        },
+        error => {
+          console.error('Error updating project status:', error);
+        }
+     );
+  }
+
+  // for searching
+
+  filterProjects(event: Event): void {
+    const searchQuery = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredProjects = this.projects.filter(project =>
+      project.project_name.toLowerCase().includes(searchQuery)
+    );
+  }
+
+  //for sorting 
+  applySort(){
+      this.sortFilteredProjects();
+  }
+  sortFilteredProjects(): void {
+    if (!this.selectedSortColumn) return; // No column selected for sorting
+
+    // Sort the filtered projects based on the selected column
+    this.filteredProjects.sort((a, b) => {
+      const valA = this.getValueForSorting(a, this.selectedSortColumn);
+      const valB = this.getValueForSorting(b, this.selectedSortColumn);
+
+      if (valA < valB) return this.isSortAscending ? -1 : 1;
+      if (valA > valB) return this.isSortAscending ? 1 : -1;
+      return 0;
+    });
+  }
+
+  // Get value for sorting based on column
+  getValueForSorting(project: Project, column: string): any {
+    switch (column) {
+      case 'projectName':
+        return project.project_name;
+      case 'reason':
+        return project.reason_id?.reason;
+      case 'type':
+        return project.type_id?.type_name;
+      case 'division':
+        return project.division_id?.division;
+      case 'category':
+        return project.category_id?.category;
+      case 'priority':
+        return project.priority_id?.priority;
+      case 'department':
+        return project.department_id?.department;
+      case 'location':
+        return project.location_id?.location;
+      case 'status':
+        return project.status_id?.status;
+
+      case 'startDate':
+        return project.start_date ? new Date(project.start_date) : null;
+      case 'endDate':
+        return project.end_date ? new Date(project.end_date) : null;
+      default:
+        return project.project_name;
+    } 
+  }
+
+    // paginator
+  onPageChange(pageNumber: number) {
+    //console.log('onPageChange() called with pageNumber:', pageNumber);
+    this.currentPage = pageNumber;
+    //console.log('Current Page:', this.currentPage);
+    this.updateFilteredProjects();
+  }
+
+  getPagesArray(): number[] {
+    return Array(Math.ceil(this.projects.length / this.pageSize))
+      .fill(0)
+      .map((x, i) => i + 1);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.projects.length / this.pageSize);
+  }
+  
+  updateFilteredProjects(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.filteredProjects = this.projects.slice(startIndex, endIndex);
+  }
+
+  nextPage(): void {
+    const totalPages = Math.ceil(this.projects.length / this.pageSize);
+    if (this.currentPage < totalPages) {
+      this.currentPage++;
+      this.updateFilteredProjects();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateFilteredProjects();
+    }
+  } 
+
+  logout(): void {
+    this.session.clearSession();
+  }
+
+
+}
