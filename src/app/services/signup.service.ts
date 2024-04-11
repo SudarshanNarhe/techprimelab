@@ -13,6 +13,7 @@ export class SignupService {
 
   url1:string="http://localhost:8080/projects/"
 
+
   constructor(public myClient : HttpClient) { }
 
   saveUser(user: User): Observable<any> {
@@ -31,12 +32,26 @@ export class SignupService {
     return this.myClient.get<any>(this.url+"getAllUser");
   }
 
+  getUserByEmail(email:string):Observable<any>{
+    return this.myClient.get<any>(`${this.url}findByMail/${email}`);
+  }
+
   login(email:string , password : string): Observable<any>{
     return this.myClient.get<any>(`${this.url}login/${email}/${password}`)
   }
 
+  loginByUser(email: string, password: string): Observable<any> {
+    
+    return this.myClient.post<any>(this.url+"login", { email, password });
+    
+  }
+
   getAllProjects():Observable<any>{
     return this.myClient.get<any>(this.url1+"getAllProjects");
+  }
+
+  getProjectListByUser(email:any):Observable<any>{
+    return this.myClient.get<any>(`${this.url1}getProjectsOfUser/${email}`);
   }
 
   getAllCategories():Observable<any>{
@@ -91,6 +106,34 @@ export class SignupService {
     return this.myClient.get<any>(this.url1+"runningProjectsCount");
   }
 
+
+  getProjectListOfUser(email : any):Observable<any>{
+    //console.log(email);
+     return this.myClient.get<any>(`${this.url1}getProjectsOfUser/${email}`);
+  }
+
+  getCountOfClosureProject():Observable<any>{
+    return this.myClient.get<any>(this.url1+"closureProjectsCount");
+  }
+
+  getSession():Observable<any>{
+    return this.myClient.get(this.url+"getSession", { responseType: 'text' });
+  }
+
+  logOutUser():Observable<any>{
+    return this.myClient.post<any>(this.url+"logout",{});
+  }
+
+  getDatForGraph():Observable<any>{
+    return this.myClient.get<any>(this.url1+"getDataforGraph");
+  }
+
+
+  updateUser(user : User):Observable<any>{
+    return this.myClient.put<any>(this.url+"updateUser",user).pipe(
+      catchError(this.errorHandler)
+    );
+  }
 
 
   errorHandler(error:any){

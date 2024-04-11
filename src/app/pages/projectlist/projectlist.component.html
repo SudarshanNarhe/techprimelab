@@ -18,8 +18,10 @@
           />
         </div>
         <div class="profile">
+          <a style="color: white;" [routerLink]="['/editprofile']">
           <mat-icon>account_circle</mat-icon>
           <span>Welcome, {{ loggedInUser }}</span>
+        </a>
         </div>
       </div>
     </div>
@@ -35,19 +37,32 @@
     >
     <li>
       <a
-      [routerLink]="['/dashboard']"
+        [routerLink]="['/editprofile']"
+        class="nav-link py-3 px-2"
+        title=""
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        data-bs-original-title="Profile"
+      >
+        <mat-icon class="grey-icon">person</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a
+      [routerLink]="isDisabled ? null : ['/dashboard']"
+      [class.disabled]="isDisabled"
         class="nav-link py-3 px-2"
         title=""
         data-bs-toggle="tooltip"
         data-bs-placement="right"
         data-bs-original-title="Dashboard"
-        onclick="toggleIcon('dashboardIcon', 'Dashboard')"
       >
         <img
           id="dashboardIcon" 
           src="/../assets/Dashboard.svg"
           alt="Dashboard"
           class="icon fs-1"
+          [class.disabled]="isDisabled"
         />
       </a>
     </li>
@@ -70,7 +85,8 @@
     </li>
     <li>
       <a
-      [routerLink]="['/createProject']"
+      [routerLink]="isDisabled ? null :['/createProject']"
+      [class.disabled]="isDisabled"
         class="nav-link py-3 px-2"
         title=""
         data-bs-toggle="tooltip"
@@ -82,23 +98,20 @@
           src="/../assets/create-project.svg"
           alt="Products"
           class="icon fs-1"
+          [class.disabled]="isDisabled"
         />
       </a>
     </li>
-    </ul>
-    <ul
-    class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
-    style="margin-top: 70vh"
-  >
+   
     <li class="align-self-end">
       <a
-        class="nav-link py-3 px-2"
-        title=""
-        data-bs-toggle="tooltip"
-        data-bs-placement="right"
-        data-bs-original-title="Logout"
-        (onclick)="logout()"
-        [routerLink]="['/Login']"
+      href="#"
+      class="nav-link py-3 px-2"
+      title=""
+      data-bs-toggle="tooltip"
+      data-bs-placement="right"
+      data-bs-original-title="Logout"
+      (click)="logout()"
       >
         <img
           id="LogoutIcon"
@@ -108,7 +121,31 @@
         />
       </a>
     </li>
-  </ul>
+  <!-- </ul> -->
+    </ul>
+    <!-- <ul
+    class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
+    style="margin-top: 70vh"
+  > -->
+    <!-- <li class="align-self-end">
+      <a
+      href="#"
+      class="nav-link py-3 px-2"
+      title=""
+      data-bs-toggle="tooltip"
+      data-bs-placement="right"
+      data-bs-original-title="Logout"
+      (click)="logout()"
+      >
+        <img
+          id="LogoutIcon"
+          src="/../assets/Logout.svg"
+          alt="Logout"
+          class="icon fs-1"
+        />
+      </a>
+    </li>
+  </ul> -->
       </div>
     </div>
     <div class="col-sm p-3 min-vh-100" style="background-color: #f3f5f7">

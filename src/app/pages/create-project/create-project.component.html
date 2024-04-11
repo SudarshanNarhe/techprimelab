@@ -17,9 +17,15 @@
             style="width: 50px; height: auto"
           />
         </div>
+        
         <div class="profile">
-          <mat-icon >account_circle</mat-icon>
-          <span>Welcome, {{ loggedInUser }}</span>
+          <button class="btn" [routerLink]="['/SignUp']">Register new Employee</button>
+          <div>
+            <a style="color: white;" [routerLink]="['/editprofile']">
+              <mat-icon>account_circle</mat-icon>
+              <span>Welcome, {{ loggedInUser }}</span>
+            </a>
+        </div>
         </div>
       </div>
     </div>
@@ -32,7 +38,18 @@
       >
       <ul
       class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
-    >
+    >  <li>
+      <a
+        [routerLink]="['/editprofile']"
+        class="nav-link py-3 px-2"
+        title=""
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        data-bs-original-title="Profile"
+      >
+        <mat-icon class="grey-icon">person</mat-icon>
+      </a>
+    </li>
       <li>
         <a
         [routerLink]="['/dashboard']"
@@ -41,7 +58,7 @@
           data-bs-toggle="tooltip"
           data-bs-placement="right"
           data-bs-original-title="Dashboard"
-          onclick="toggleIcon('dashboardIcon', 'Dashboard')"
+          
         >
           <img
             id="dashboardIcon"
@@ -85,30 +102,48 @@
           />
         </a>
       </li>
-    </ul>
-    <ul
-    class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
-    style="margin-top: 70vh"
-  >
-    <li class="align-self-end">
-      <a
-        [routerLink]="['/Login']"
+      <li class="align-self-end">
+        <a
+        href="#"
         class="nav-link py-3 px-2"
         title=""
         data-bs-toggle="tooltip"
         data-bs-placement="right"
         data-bs-original-title="Logout"
-        (onclick)="logout()"
-      >
-        <img
-          id="LogoutIcon"
-          src="/../assets/Logout.svg"
-          alt="Logout"
-          class="icon fs-1"
-        />
-      </a>
+        (click)="logout()"
+        >
+          <img
+            id="LogoutIcon"
+            src="/../assets/Logout.svg"
+            alt="Logout"
+            class="icon fs-1"
+          />
+        </a>
+      </li>
+    </ul>
+    <!-- <ul
+    class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
+    style="margin-top: 70vh"
+  >
+    <li class="align-self-end">
+      <a
+        href="#"
+        class="nav-link py-3 px-2"
+        title=""
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        data-bs-original-title="Logout"
+        (click)="logout()"
+        >
+          <img
+            id="LogoutIcon"
+            src="/../assets/Logout.svg"
+            alt="Logout"
+            class="icon fs-1"
+          />
+        </a>
     </li>
-  </ul>
+  </ul> -->
       </div>
     </div>
     <div class="col-sm p-3 min-vh-100" style="background-color: #f3f5f7">

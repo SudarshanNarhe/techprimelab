@@ -1,4 +1,9 @@
-export enum Role {
-    manager = 1,
-    user=2
+export class Role {
+    admin: string;
+    user : string;
+
+    constructor(admin:string,user : string){
+        this.admin=admin;
+        this.user=user;
+    }
 }

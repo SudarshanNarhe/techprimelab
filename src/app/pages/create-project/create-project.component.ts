@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SignupService } from '../../services/signup.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { SessionServiceService } from '../../services/session-service.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -51,7 +51,8 @@ export class CreateProjectComponent implements OnInit{
   ngOnInit(): void {
       this.initializeForm();
       this.getAllData();
-      this.loggedInUser = this.session.getLoggedUser();
+     // this.loggedInUser = this.session.getLoggedUser();
+     this.getSession();
   }
 
   initializeForm(): void {
@@ -149,11 +150,37 @@ export class CreateProjectComponent implements OnInit{
     //     console.log(user.id);
     // });
     })
+
+  
   }
 
-  logout(): void {
-    this.router.navigate(['/Login']);
-    this.session.clearSession();
+  getSession() {
+    this.mySer.getSession().subscribe(
+      (response: string) => {
+        this.loggedInUser = response;
+      },
+      (error) => {
+        console.log("Error getting session:", error);
+      }
+    );
   }
+
+  logout() {
+    console.log("in logout")
+    this.mySer.logOutUser().subscribe(
+      response => {
+        this.router.navigate(['/login']);
+        console.log('Logout successful:', response);
+        
+        // Handle logout success, such as redirecting to login page or showing a message
+      },
+      error => {
+        console.error('Logout failed:', error);
+        // Handle logout failure
+      }
+    );
+  }
+
+  
 
 }

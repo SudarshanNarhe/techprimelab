@@ -5,6 +5,7 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { SignupService } from '../../services/signup.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SessionServiceService } from '../../services/session-service.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -19,9 +20,10 @@ export class LoginComponent implements OnInit{
 
   loginForm!:FormGroup;
   isFormSubmitted:boolean=false;
-  isValidUser: boolean=false;
+  isValidUser: boolean=true;  
 
-  constructor(private fb : FormBuilder, private mySer : SignupService,private router : Router, private session : SessionServiceService){
+
+  constructor(private fb : FormBuilder, private mySer : SignupService,private router : Router, private session : SessionServiceService,private snackBar: MatSnackBar){
 
   }
 
@@ -33,25 +35,86 @@ export class LoginComponent implements OnInit{
       });
     }
 
-    checkUser(){
-        if(this.loginForm.valid){
-          const{email, password}=this.loginForm.value;
-          this.mySer.login(email,password).subscribe(result =>{
-            this.isValidUser=result;
-          });
-        }
-        if(!this.isValidUser){
-          alert('You are Not Valid User Please SignUp First')
-          this.loginForm.reset();
-        }
-        else{
-          const email = this.loginForm.get('email')?.value;
-          this.session.setLoggedUser(email);
-          alert('Login Successful')
-          this.router.navigate(['/createProject']);
-        }
+    // checkUser(){
+    //     if(this.loginForm.valid){
+    //       const{email, password}=this.loginForm.value;
+    //       this.mySer.login(email,password).subscribe(result =>{
+    //         this.isValidUser=result;
+    //         console.log("in check user"+this.isValidUser)
+    //       });
+    //     }
+    //     console.log(this.isValidUser)
+    //     if(!this.isValidUser){
+    //       alert('You are Not Valid User Please SignUp First')
+    //       this.loginForm.reset();
+    //     }
+    //     else{
+    //       const email = this.loginForm.get('email')?.value;
+    //       this.session.setLoggedUser(email);
+    //       alert('Login Successful')
+    //       this.router.navigate(['/createProject']);
+    //     }
 
 
+    //   }
+
+      onSubmit(): void {
+        console.log("in submit method")
+      if (this.loginForm.valid) {
+        const { email, password } = this.loginForm.value;
+    
+        this.mySer.loginByUser(email, password).subscribe(
+          (response: any) => {
+            if (response && response.status === 'success' && response.message === 'Login successful') {
+              // Handle successful login
+              console.log("111",response)
+            //console.log(response.user_role)
+            this.snackBar.open("Login Successful.", 'Close', {
+              duration: 3000 // Duration in milliseconds
+            });
+           // this.router.navigate(['/createProject']);
+              if (response.user_role === 'admin') {
+                console.log(response.user_role)
+                this.router.navigate(['/createProject']);
+              }
+              else if(response.user_role === 'user'){
+                this.router.navigate(['/projectlist']);
+              }
+               else  {
+                // Handle other roles or scenarios
+              }
+            } else {
+              //console.error("Unexpected response:", response);
+              // Handle unexpected response format
+              this.snackBar.open("Unexpected response. Please try again later.", 'Close', {
+                duration: 3000 // Duration in milliseconds
+              });
+              this.loginForm.reset();
+            }
+          },
+          (error: any) => {
+           // console.log(error);
+            if (error.status === 404) {
+              this.snackBar.open("User not found. Please register...", 'Close', {
+                duration: 3000 // Duration in milliseconds
+              });
+              this.loginForm.reset();
+            } else if (error.status === 401) {
+              this.snackBar.open("Incorrect password...", 'Close', {
+                duration: 3000 // Duration in milliseconds
+              });
+              this.loginForm.reset();
+            } else {
+              // Handle other errors
+             // console.error("An unexpected error occurred:", error);
+              this.snackBar.open("An unexpected error occurred. Please try again later.", 'Close', {
+                duration: 3000 // Duration in milliseconds
+              });
+              this.loginForm.reset();
+            }
+          }
+        );
+      }
       }
 
     }

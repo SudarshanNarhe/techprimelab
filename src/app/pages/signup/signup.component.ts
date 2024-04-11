@@ -33,6 +33,7 @@ export class SignupComponent implements OnInit{
     }
 
     onSumbit(){
+      console.log("In submit of register")
       let ur=this.userForm.value;
       if(!this.isFormSubmitted && this.userForm.valid){
        this.mySer.saveUser(ur).subscribe(result=>{

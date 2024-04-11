@@ -18,8 +18,10 @@
             />
           </div>
           <div class="profile">
-            <mat-icon>account_circle</mat-icon>
-            <span>Welcome, {{ loggedInUser }}</span>
+            <a style="color: white;" [routerLink]="['/editprofile']">
+              <mat-icon>account_circle</mat-icon>
+              <span>Welcome, {{ loggedInUser }}</span>
+            </a>
           </div>
         </div>
       </div>
@@ -33,6 +35,18 @@
           <ul
             class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
           >
+          <li>
+            <a
+              [routerLink]="['/editprofile']"
+              class="nav-link py-3 px-2"
+              title=""
+              data-bs-toggle="tooltip"
+              data-bs-placement="right"
+              data-bs-original-title="Profile"
+            >
+              <mat-icon class="grey-icon">person</mat-icon>
+            </a>
+          </li>
             <li>
               <a
                 [routerLink]="['/dashboard']"
@@ -41,7 +55,7 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="right"
                 data-bs-original-title="Dashboard"
-                onclick="toggleIcon('dashboardIcon', 'Dashboard')"
+          
               >
                 <img
                   id="dashboardIcon"
@@ -59,7 +73,7 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="right"
                 data-bs-original-title="Orders"
-                onclick="toggleIcon('ordersIcon', 'Orders')"
+                
               >
                 <img
                   id="ordersIcon"
@@ -77,7 +91,7 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="right"
                 data-bs-original-title="Products"
-                onclick="toggleIcon('productsIcon', 'Products')"
+               
               >
                 <img
                   id="productsIcon"
@@ -87,21 +101,39 @@
                 />
               </a>
             </li>
-          </ul>
-        </div>
-        <ul
-          class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
-          style="margin-top: 70vh"
-        >
-          <li class="align-self-end">
-            <a
-              [routerLink]="['/Login']"
+            <li class="align-self-end">
+              <a
+              href="#"
               class="nav-link py-3 px-2"
               title=""
               data-bs-toggle="tooltip"
               data-bs-placement="right"
               data-bs-original-title="Logout"
-              (onclick)="logout()"
+              (click)="logout()"
+              >
+                <img
+                  id="LogoutIcon"
+                  src="/../assets/Logout.svg"
+                  alt="Logout"
+                  class="icon fs-1"
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
+        <!-- <ul
+          class="nav nav-pills navbar nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center"
+          style="margin-top: 70vh"
+        >
+          <li class="align-self-end">
+            <a
+            href="#"
+            class="nav-link py-3 px-2"
+            title=""
+            data-bs-toggle="tooltip"
+            data-bs-placement="right"
+            data-bs-original-title="Logout"
+            (click)="logout()"
             >
               <img
                 id="LogoutIcon"
@@ -111,7 +143,7 @@
               />
             </a>
           </li>
-        </ul>
+        </ul> -->
       </div>
       <div class="col-sm min-vh-100" style="background-color: #f3f5f7">
         <!-- cards start -->
@@ -168,6 +200,27 @@
               </div>
             </div>
             <!-- cards end -->
+            
+            <div class="chart-container">
+              <jqxChart 
+                [width]="700"
+                [height]="550"
+                [title]="'Department Wise - Total Vs Closed'"
+                [description]="''"
+                [showLegend]="true"
+                [enableAnimations]="true"
+                [padding]="padding"
+                [titlePadding]="titlePadding"
+                [source]="sampleData"
+                [xAxis]="xAxis"
+                [seriesGroups]="seriesGroups"
+                [colorScheme]="'scheme01'"
+              >  
+              </jqxChart>
+            </div>
+
           </div>
         </div>
       </div>
+
+      <!-- <script src="path_to_jqxChart_script_file.js"></script> -->

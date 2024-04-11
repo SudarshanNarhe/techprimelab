@@ -90,3 +90,7 @@
     display: inline-block;
     vertical-align: middle; /* Align username vertically */
   }
+
+  .grey-icon {
+    color: grey;
+  }
